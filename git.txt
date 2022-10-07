@@ -1,0 +1,24 @@
+    CÁC CÂU LỆNH GIT CƠ BẢN 
+ - git branch -d tên nhánh              // xóa 1 nhánh  
+ - git checkout -b tên nhánh            // tạo mới 1 nhánh và chuyển sang nhánh đó 
+ - git branch:                          //xem tất cả các nhánh 
+ - git checkout tên nhánh              // chuyển nhánh 
+ - git commit -m "phần này mô tả đoạn code muốn commit"  // commit code - code dưới local 
+ - git push origin tên nhánh                             // đẩy code lên nhánh  (origin là tên remote mà cta đặt) 
+ - git add .                                              // add nhiều file 1 lúc 
+ - git add fileName                                     // add từng file  
+ - git remote add tên_remote link remote                // thêm mới 1 remote  
+ - git pull orgin tên nhánh                             //kéo code mới nhất của nhánh đó về local
+ 
+ ----------------------------------------------------------------------------------------------------------------
+
+ bước 1 : git init // khởi tạo repo dưới local máy mình  
+  (thêm git status // trạng thái của repo ( repo viết tắt repository ) nơi chứa code ) 
+bước 2: git checkout -b develop  // tạo nhánh mới có tên develop 
+bước 3: git add . // add tất cả các file  
+    (    git add class // add từng file  )
+       
+     ( muốn di chuyển về nhánh trước thì k cần -b)   
+     
+ 
+bước 4: git clone ..........

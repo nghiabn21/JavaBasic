@@ -1,0 +1,28 @@
+authentication: kiểm tra xem tài khoản mật khẩu có trong database k, nếu có thì pass qua k thì thôi 
+authortication: phân quyền admin vs user 
+static: khai báo trong main không cần tạo đối đượng mà chỉ cần chạy luôn phương thức 
+- 4 đặc điểm cơ bản của oop: tính đóng gói (ecapsulation) , tính kế thừa, tính trừu tượng, tính đa hình 
+- executeQuery
+• Chủ yếu sử dụng lệnh Select
+-  executeUpdate
+• SQL phải chứa các lệnh Update, Insert hoặc Delete 
+ 
+- synchronized : đồng bộ luồng giúp cho khi nhiều thread tác động vào 1 phương thức thì k bị rối loạn.
+- notifyAll: đánh thức tất cả các luồng ví dụ (vd.notifyAll()) thì tất cả các synchronized(vd) sẽ đc đánh thức hết  
+ 
+- static: đc sd để quản lý bộ nhớ, dùng cho biến, khối, block và k thể ghi đè phương thức static, biến static đc dùng để tham chiếu tới thuộc tính chung của tất cả đối tượng
+
+- next(): Phương thức này chỉ có thể đọc đầu vào cho đến khi gặp phải dấu cách (” “). Nó không thể đọc hai từ cách nhau bởi một khoảng trắng. 
+- nextLine(): nó có thể nhận dữ liệu đầu vào bao gồm cả những khoảng trắng giữa các từ cho đến cuối dòng(\n) hoặc nhấn phím Enter.
+
+- gmail:  Pattern p = Pattern.compile("^[A-Za-z].*?@gmail\\.com$"); 
+- 7 chữ số : boolean pa = Pattern.matches("[0-9]{7}" ,number);  
+- Phone: must be at least 10 digits : Pattern pa = Pattern.compile("^\\d{10}$");
+- Student Id: 6 digits (i.e. 123456) : Pattern pa = Pattern.compile("^\\d{6}$");
+- Bill code: start with B letter follows 4 digit numbers (i.e. B0000) : return Pattern.matches("^(B)[0-9]{4}$", billCode);
+- Course Id: 2 upper case letter follows by 3 digits (i.e. CS141): Pattern pa = Pattern.compile("[A-Z]{2}\\d{3}");
+- Date of birth: must be date format : public static final String DATE_PATTERN = "^([0-2][0-9]|(3)[0-1])(\\/)(((0)[0-9])|((1)[0-2]))(\\/)\\d{4}$";
+- Position: only one of (“GK”, “CB”, “WB”, “CM”,”CF”) : public static final String POSITION_PATTERN = "^GK|CB|WB|CM|CF$"; 
+
+
+
