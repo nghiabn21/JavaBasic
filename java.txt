@@ -24,5 +24,32 @@ static: khai báo trong main không cần tạo đối đượng mà chỉ cần
 - Date of birth: must be date format : public static final String DATE_PATTERN = "^([0-2][0-9]|(3)[0-1])(\\/)(((0)[0-9])|((1)[0-2]))(\\/)\\d{4}$";
 - Position: only one of (“GK”, “CB”, “WB”, “CM”,”CF”) : public static final String POSITION_PATTERN = "^GK|CB|WB|CM|CF$"; 
 
+- https://vdi.fsoft.com.vn 
+- mk trang dinamol: nghiabn18 anhnghia20 
+
+        // http://localhost:8080/nghia/api/v1/hanghoa/search?ma=V00001&ten_hang_hoa=Xe VIOS&page=1&size=2
+        cấu hình: server.servlet.context-path=/nghia
+        String url = request.getRequestURL().toString(); http://localhost:8080/nghia/api/v1/hanghoa/search
+        String scheme = request.getScheme();             http
+        String serverName = request.getServerName();     localhost
+        int portNumber = request.getServerPort();        8080
+        String uri = request.getRequestURI();            /nghia/api/v1/hanghoa/search      
+        String queryString = request.getQueryString();   null
+        String contextPath = request.getContextPath();   /nghia
+        String servletPath = request.getServletPath();   /api/v1/hanghoa/search
+        String pathInfo = request.getPathInfo();         null
+        String query = request.getQueryString();         ma=V00001&ten_hang_hoa=Xe%20VIOS&page=1&size=2
+        Locale local = request.getLocale();              en_US
+
+
+- https://stackoverflow.com/questions/2417949/getcontextpath-using-servlet
+
+
+
+
+
+
+
+
 
 
