@@ -13,4 +13,9 @@ public interface UserService {
     void addRoleToUser(String userName , String roleName) ;
     User getUser(String name ) ;
     List<User> getUsers() ;
+
+    void updateResetPasswordToken(String token, String email);
+    User getByResetPasswordToken(String token) ;
+
+    void updatePassword(User user, String newPassword);
 }

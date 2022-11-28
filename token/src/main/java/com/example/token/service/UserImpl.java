@@ -2,29 +2,23 @@ package com.example.token.service;
 
 import com.example.token.domain.Role;
 import com.example.token.domain.User;
+import com.example.token.exception.CustomerNotFoundException;
 import com.example.token.repo.RoleRepo;
 import com.example.token.repo.UserRepo;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
 @Slf4j
-public class UserImpl implements UserService, UserDetailsService {
+public class UserImpl implements UserService{
     private final UserRepo userRepo ;
+
     private final RoleRepo roleRepo;
 
     @Override
@@ -58,19 +52,28 @@ public class UserImpl implements UserService, UserDetailsService {
         return userRepo.findAll();
     }
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepo.findByUsername(username);
-        if(user == null) {
-        log.error("User not found");
-        throw new UsernameNotFoundException("User not found");
-        }else {
-        log.info("User found in database");
+    public void updateResetPasswordToken(String token, String email) throws CustomerNotFoundException {
+        User user = userRepo.findByEmail(email);
+        if (user != null) {
+            user.setResetPasswordToken(token);
+            userRepo.save(user);
+        } else {
+            throw new CustomerNotFoundException("Could not find any customer with the email " + email);
         }
-        Collection<SimpleGrantedAuthority> authorities = new ArrayList<>() ;
-        user.getRoles().forEach(role -> {
-            authorities.add(new SimpleGrantedAuthority(role.getName()));
-        });
-        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), authorities);
     }
+
+    public User getByResetPasswordToken(String token) {
+        return userRepo.findByResetPasswordToken(token);
+    }
+
+    public void updatePassword(User user, String newPassword) {
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String encodedPassword = passwordEncoder.encode(newPassword);
+        user.setPassword(encodedPassword);
+
+        user.setResetPasswordToken(null);
+        userRepo.save(user);
+    }
+
+
 }
