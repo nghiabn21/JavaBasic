@@ -43,14 +43,13 @@ public class UserResource {
         userService.addRoleToUser(role.getUserName(), role.getRoleName());
         return ResponseEntity.ok().build();
     }
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    class RoleToUser {
+        private String userName;
+        private String roleName;
 
 }
-
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-class RoleToUser {
-    private String userName;
-    private String roleName;
 }
 
