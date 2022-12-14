@@ -1,5 +1,6 @@
 package com.example.token.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,6 +28,7 @@ public class User {
     private String resetPasswordToken ;
 
     @ManyToMany(fetch = FetchType.EAGER)
+    @JsonIgnore
     private Collection<Role> roles = new ArrayList<>();
 
 }

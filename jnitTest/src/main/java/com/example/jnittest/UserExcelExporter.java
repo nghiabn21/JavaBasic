@@ -18,8 +18,6 @@ public class UserExcelExporter {
     private XSSFSheet sheet;
     private List<User> listUsers;
 
-
-
     public UserExcelExporter(List<User> listUsers) {
         this.listUsers = listUsers;
        workbook = new XSSFWorkbook();

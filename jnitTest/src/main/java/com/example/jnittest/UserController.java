@@ -22,11 +22,11 @@ public class UserController {
     @GetMapping("/users/export/excel")
     public void exportToExcel(HttpServletResponse response) throws IOException {
         response.setContentType("application/octet-stream");
-        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
         String currentDateTime = dateFormatter.format(new Date());
-
+        String filename = "nghia"+ currentDateTime + ".xlsx";
         String headerKey = "Content-Disposition";
-        String headerValue = "attachment; filename=users.xlsx";
+        String headerValue = "attachment; filename=" + filename;
         response.setHeader(headerKey, headerValue);
 
         List<User> listUsers = service.listAll();
