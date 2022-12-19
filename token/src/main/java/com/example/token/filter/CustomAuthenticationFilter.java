@@ -2,6 +2,7 @@ package com.example.token.filter;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.example.token.domain.Login;
 import com.example.token.sercurity.ApiCustomException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.util.StreamUtils;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import javax.servlet.FilterChain;
@@ -37,18 +39,19 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
-        log.info("Username is: {}", username);
-
-            if (username.equals("")) {
-                throw new ApiCustomException("not ok");
-            }
-
-
-        //   handlerExceptionResolver.resolveException(request, response, null, ade);
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
-        return authenticationManager.authenticate(authenticationToken);
+        Map<String, String> jsonRequest ;
+        try {
+            RequestWrapper wrapper = new RequestWrapper(request);
+            byte[] body = StreamUtils.copyToByteArray(wrapper.getInputStream());
+            Login reds = new ObjectMapper().readValue(body, Login.class);
+            String username = reds.getAccount();
+            String password = reds.getPassword();
+            log.info(username + " " + password);
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
+            return authenticationManager.authenticate(authenticationToken);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -68,11 +71,9 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
                 .withExpiresAt(new Date(System.currentTimeMillis() + 10 * 60 * 10000))
                 .withIssuer(request.getRequestURI())
                 .sign(algorithm);
-        Map<String, String> tokens = new HashMap<>();
-        tokens.put("access_token", access_token);
-        tokens.put("refresh_token", refresh_token);
-        response.setContentType(APPLICATION_JSON_VALUE);
-        new ObjectMapper().writeValue(response.getOutputStream(), tokens);
+        response.setHeader("access_token", access_token);
+        response.setHeader("refresh_token", refresh_token);
+        chain.doFilter(request, response);
     }
 }
 

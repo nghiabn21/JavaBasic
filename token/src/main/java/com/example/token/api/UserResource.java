@@ -1,5 +1,6 @@
 package com.example.token.api;
 
+import com.example.token.domain.Login;
 import com.example.token.domain.Role;
 import com.example.token.domain.User;
 import com.example.token.domain.Utility;
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import net.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -23,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -71,6 +74,13 @@ public class UserResource {
             throw new CustomerNotFoundException("Error");
         }
         return ResponseEntity.ok("ok");
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody Login login) {
+      //  URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/role/save").toUriString());
+  //      String name = login.getAccount() ;
+        return ResponseEntity.ok("pl");
     }
 
     public void sendEmail(String recipientEmail, String link)
