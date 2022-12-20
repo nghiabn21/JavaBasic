@@ -3,6 +3,7 @@ package com.example.token.sercurity;
 import com.example.token.filter.CustomAuthenticationFilter;
 import com.example.token.filter.CustomAuthorizationFilter;
 import com.example.token.filter.JwtUserDetails;
+import com.example.token.filter.TemporaryPasswordUserDetailsService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -27,7 +28,8 @@ public class SercurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     JwtUserDetails userDetails;
 
-    private final HandlerExceptionResolver handlerExceptionResolver;
+    @Autowired
+    TemporaryPasswordUserDetailsService temporaryPasswordUserDetailsService;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -43,11 +45,12 @@ public class SercurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetails).passwordEncoder(passwordEncoder());
+        auth.userDetailsService(temporaryPasswordUserDetailsService).passwordEncoder(passwordEncoder());
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        CustomAuthenticationFilter customAuthenticationFilter = new CustomAuthenticationFilter(handlerExceptionResolver,authenticationManager());
+        CustomAuthenticationFilter customAuthenticationFilter = new CustomAuthenticationFilter(authenticationManager());
         customAuthenticationFilter.setFilterProcessesUrl("/api/login");
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);

@@ -23,6 +23,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -34,19 +35,20 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RequiredArgsConstructor
 public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
-    private final HandlerExceptionResolver handlerExceptionResolver;
     private final AuthenticationManager authenticationManager;
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-        Map<String, String> jsonRequest ;
         try {
             RequestWrapper wrapper = new RequestWrapper(request);
-            byte[] body = StreamUtils.copyToByteArray(wrapper.getInputStream());
+            InputStream inputStream = wrapper.getInputStream();
+            byte[] body = StreamUtils.copyToByteArray(inputStream);
             Login reds = new ObjectMapper().readValue(body, Login.class);
             String username = reds.getAccount();
             String password = reds.getPassword();
             log.info(username + " " + password);
+//        String username = request.getParameter("account");
+//        String password = request.getParameter("password");
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
             return authenticationManager.authenticate(authenticationToken);
         } catch (IOException e) {

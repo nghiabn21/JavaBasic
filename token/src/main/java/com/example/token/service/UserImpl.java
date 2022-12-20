@@ -10,14 +10,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
 @Slf4j
-public class UserImpl implements UserService{
-    private final UserRepo userRepo ;
+public class UserImpl implements UserService {
+    private final UserRepo userRepo;
 
     private final RoleRepo roleRepo;
 
@@ -35,15 +36,15 @@ public class UserImpl implements UserService{
 
     @Override
     public void addRoleToUser(String userName, String roleName) {
-           log.info("adding  role {} to user {} to the database", roleName, userName);
-           User user = userRepo.findByUsername(userName) ;
-           Role role = roleRepo.findByName(roleName) ;
-           user.getRoles().add(role);
+        log.info("adding  role {} to user {} to the database", roleName, userName);
+        User user = userRepo.findByUsername(userName);
+        Role role = roleRepo.findByName(roleName);
+        user.getRoles().add(role);
     }
 
     @Override
     public User getUser(String name) {
-        log.info("Fetching username", name );
+        log.info("Fetching username", name);
         return userRepo.findByUsername(name);
     }
 
@@ -52,10 +53,13 @@ public class UserImpl implements UserService{
         return userRepo.findAll();
     }
 
-    public void updateResetPasswordToken(String token, String email) throws CustomerNotFoundException {
+    public void updateResetPasswordToken(String token, String email, String pass) throws CustomerNotFoundException {
         User user = userRepo.findByEmail(email);
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         if (user != null) {
             user.setResetPasswordToken(token);
+            String tem = passwordEncoder.encode(pass);
+            user.setTemporatyPassword(tem);
             userRepo.save(user);
         } else {
             throw new CustomerNotFoundException("Could not find any customer with the email " + email);
@@ -70,7 +74,6 @@ public class UserImpl implements UserService{
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         String encodedPassword = passwordEncoder.encode(newPassword);
         user.setPassword(encodedPassword);
-
         user.setResetPasswordToken(null);
         userRepo.save(user);
     }

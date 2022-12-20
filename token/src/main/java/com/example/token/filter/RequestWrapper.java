@@ -1,7 +1,7 @@
 package com.example.token.filter;
 
 
-import java.io.IOException;
+import java.io.*;
 
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -15,14 +15,19 @@ public class RequestWrapper extends HttpServletRequestWrapper {
 
     public RequestWrapper(HttpServletRequest request) throws IOException {
         super(request);
-
-        this.body = StreamUtils.copyToByteArray(request.getInputStream());
+        InputStream requestInputStream = request.getInputStream();
+        this.body = StreamUtils.copyToByteArray(requestInputStream);
     }
 
     @Override
     public ServletInputStream getInputStream() throws IOException {
         return new ServletInputStreamWrapper(this.body);
+    }
 
+    @Override
+    public BufferedReader getReader() throws IOException {
+        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(this.body);
+        return new BufferedReader(new InputStreamReader(byteArrayInputStream));
     }
 
 }

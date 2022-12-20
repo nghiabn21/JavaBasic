@@ -23,6 +23,7 @@ public class User {
     private String username ;
     private String password ;
     private String email ;
+    private String temporatyPassword ;
 
     @Column(name = "reset_password_token")
     private String resetPasswordToken ;

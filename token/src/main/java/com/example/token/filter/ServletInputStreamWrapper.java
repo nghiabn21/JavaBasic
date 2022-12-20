@@ -7,13 +7,13 @@ import java.io.InputStream;
 import javax.servlet.ReadListener;
 import javax.servlet.ServletInputStream;
 
-public class ServletInputStreamWrapper extends ServletInputStream{
+public class ServletInputStreamWrapper extends ServletInputStream {
 
 
     private InputStream inputStream;
 
 
-    public  ServletInputStreamWrapper(byte[] body) {
+    public ServletInputStreamWrapper(byte[] body) {
 
 
         this.inputStream = new ByteArrayInputStream(body);
@@ -26,7 +26,7 @@ public class ServletInputStreamWrapper extends ServletInputStream{
 
             return inputStream.available() == 0;
 
-        }catch(Exception e) {
+        } catch (Exception e) {
 
             return false;
         }
@@ -39,8 +39,6 @@ public class ServletInputStreamWrapper extends ServletInputStream{
 
     @Override
     public void setReadListener(ReadListener listener) {
-
-
     }
 
     @Override

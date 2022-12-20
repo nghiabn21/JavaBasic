@@ -1,15 +1,13 @@
 package com.example.token.api;
 
-import com.example.token.domain.Login;
-import com.example.token.domain.Role;
-import com.example.token.domain.User;
-import com.example.token.domain.Utility;
+import com.example.token.domain.*;
 import com.example.token.exception.CustomerNotFoundException;
 import com.example.token.service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import net.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
@@ -31,45 +29,22 @@ import java.util.Map;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api")
+@Slf4j
 public class UserResource {
     @Autowired
     UserService userService;
-
-
     private JavaMailSender mailSender;
 
-
-    @GetMapping("/users")
-    public ResponseEntity<List<User>> getUser() {
-        return ResponseEntity.ok().body(userService.getUsers());
-    }
-
-    @PostMapping("/user/save")
-    public ResponseEntity<User> saveUser(@RequestBody User user) {
-        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/user/save").toUriString());
-        return ResponseEntity.created(uri).body(userService.saveUser(user));
-    }
-
-    @PostMapping("/role/save")
-    public ResponseEntity<Role> roleUser(@RequestBody Role role) {
-        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/role/save").toUriString());
-        return ResponseEntity.created(uri).body(userService.saveRole(role));
-    }
-
-    @PostMapping("/role/addtouser")
-    public ResponseEntity<?> addroleUser(@RequestBody RoleToUser role) {
-        userService.addRoleToUser(role.getUserName(), role.getRoleName());
-        return ResponseEntity.ok().build();
-    }
-
     @PostMapping("/forgot_password")
-    public ResponseEntity<?> processForgotPassword(HttpServletRequest request) {
-        String email = request.getParameter("email");
+    public ResponseEntity<?> processForgotPassword(@RequestBody Email email,HttpServletRequest request) {
+     //   String email = request.getParameter("a");
+        log.info(email.getEmail().toString());
         String token = RandomString.make(30);
+        String pass = RandomString.make(5);
         try {
-            userService.updateResetPasswordToken(token, email);
+            userService.updateResetPasswordToken(token, email.getEmail(), pass);
             String resetPasswordLink = Utility.getSiteURL(request) + "/reset_password?token=" + token;
-            sendEmail(email, resetPasswordLink);
+            sendEmail(email.getEmail(), resetPasswordLink,pass);
         } catch (CustomerNotFoundException | MessagingException | UnsupportedEncodingException ex) {
             throw new CustomerNotFoundException("Error");
         }
@@ -80,10 +55,10 @@ public class UserResource {
     public ResponseEntity<?> login(@RequestBody Login login) {
       //  URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/role/save").toUriString());
   //      String name = login.getAccount() ;
-        return ResponseEntity.ok("pl");
+        return ResponseEntity.ok("Login Success");
     }
 
-    public void sendEmail(String recipientEmail, String link)
+    public void sendEmail(String recipientEmail, String link, String pass)
             throws MessagingException, UnsupportedEncodingException {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message);
@@ -94,6 +69,7 @@ public class UserResource {
                 + "<p>You have requested to reset your password.</p>"
                 + "<p>Click the link below to change your password:</p>"
                 + "<p><a href=\"" + link + "\">Change my password</a></p>"
+                + "<p>" + pass + "</p>"
                 + "<br>"
                 + "<p>Ignore this email if you do remember your password, "
                 + "or you have not made the request.</p>";
