@@ -7,7 +7,9 @@ import com.example.token.repo.RoleRepo;
 import com.example.token.repo.UserRepo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,9 +24,12 @@ public class UserImpl implements UserService {
 
     private final RoleRepo roleRepo;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     @Override
     public User saveUser(User user) {
         log.info("Saving new user to the database");
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepo.save(user);
     }
 
@@ -54,27 +59,27 @@ public class UserImpl implements UserService {
     }
 
     public void updateResetPasswordToken(String token, String email, String pass) throws CustomerNotFoundException {
-        User user = userRepo.findByEmail(email);
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        if (user != null) {
-            user.setResetPasswordToken(token);
-            String tem = passwordEncoder.encode(pass);
-            user.setTemporatyPassword(tem);
-            userRepo.save(user);
-        } else {
-            throw new CustomerNotFoundException("Could not find any customer with the email " + email);
-        }
+//        User user = userRepo.findByEmail(email);
+//        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+//        if (user != null) {
+//            user.setResetPasswordToken(token);
+//            String tem = passwordEncoder.encode(pass);
+//            user.setTemporatyPassword(tem);
+//            userRepo.save(user);
+//        } else {
+//            throw new CustomerNotFoundException("Could not find any customer with the email " + email);
+//        }
     }
 
-    public User getByResetPasswordToken(String token) {
-        return userRepo.findByResetPasswordToken(token);
-    }
+//    public User getByResetPasswordToken(String token) {
+//        return userRepo.findByResetPasswordToken(token);
+//    }
 
     public void updatePassword(User user, String newPassword) {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         String encodedPassword = passwordEncoder.encode(newPassword);
         user.setPassword(encodedPassword);
-        user.setResetPasswordToken(null);
+//        user.setResetPasswordToken(null);
         userRepo.save(user);
     }
 

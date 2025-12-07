@@ -33,7 +33,7 @@ import java.util.Map;
 public class UserResource {
     @Autowired
     UserService userService;
-    private JavaMailSender mailSender;
+//    private JavaMailSender mailSender;
 
     @PostMapping("/forgot_password")
     public ResponseEntity<?> processForgotPassword(@RequestBody Email email,HttpServletRequest request) {
@@ -41,49 +41,75 @@ public class UserResource {
         log.info(email.getEmail().toString());
         String token = RandomString.make(30);
         String pass = RandomString.make(5);
-        try {
-            userService.updateResetPasswordToken(token, email.getEmail(), pass);
-            String resetPasswordLink = Utility.getSiteURL(request) + "/reset_password?token=" + token;
-            sendEmail(email.getEmail(), resetPasswordLink,pass);
-        } catch (CustomerNotFoundException | MessagingException | UnsupportedEncodingException ex) {
-            throw new CustomerNotFoundException("Error");
-        }
+//        try {
+//            userService.updateResetPasswordToken(token, email.getEmail(), pass);
+//            String resetPasswordLink = Utility.getSiteURL(request) + "/reset_password?token=" + token;
+////            sendEmail(email.getEmail(), resetPasswordLink,pass);
+//        } catch (CustomerNotFoundException | MessagingException | UnsupportedEncodingException ex) {
+//            throw new CustomerNotFoundException("Error");
+//        }
         return ResponseEntity.ok("ok");
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody Login login) {
+    public ResponseEntity<?> login() {
       //  URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/role/save").toUriString());
   //      String name = login.getAccount() ;
         return ResponseEntity.ok("Login Success");
     }
 
-    public void sendEmail(String recipientEmail, String link, String pass)
-            throws MessagingException, UnsupportedEncodingException {
-        MimeMessage message = mailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message);
-        helper.setFrom("nghiabn21@gmail.com", "Shoppe Support");
-        helper.setTo(recipientEmail);
-        String subject = "Here's the link to reset your password";
-        String content = "<p>Hello,</p>"
-                + "<p>You have requested to reset your password.</p>"
-                + "<p>Click the link below to change your password:</p>"
-                + "<p><a href=\"" + link + "\">Change my password</a></p>"
-                + "<p>" + pass + "</p>"
-                + "<br>"
-                + "<p>Ignore this email if you do remember your password, "
-                + "or you have not made the request.</p>";
-        helper.setSubject(subject);
-        helper.setText(content, true);
-        mailSender.send(message);
+    @GetMapping("/users")
+    public ResponseEntity<List<User>> getUsers() {
+        return ResponseEntity.ok().body(userService.getUsers());
     }
+
+    @PostMapping("/user/save")
+    public ResponseEntity<?> saveUser(@RequestBody User user) {
+        // lây đường dẫn hiện tại + /api/user/save
+        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path("/api/user/save").toUriString());
+        return ResponseEntity.created(uri).body(  userService.saveUser(user));
+    }
+
+    @PostMapping("/role/save")
+    public ResponseEntity<?> saveRole(@RequestBody Role user) {
+        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path("/api/role/save").toUriString());
+        return ResponseEntity.created(uri).body( userService.saveRole(user));
+    }
+
+    @PostMapping("/role/addtouser")
+    public ResponseEntity<?> addtouser(@RequestBody RoleToUser user) {
+        userService.addRoleToUser(user.getUserName(), user.getRoleName());
+        return ResponseEntity.ok().build();
+    }
+
+//    public void sendEmail(String recipientEmail, String link, String pass)
+//            throws MessagingException, UnsupportedEncodingException {
+//        MimeMessage message = mailSender.createMimeMessage();
+//        MimeMessageHelper helper = new MimeMessageHelper(message);
+//        helper.setFrom("nghiabn21@gmail.com", "Shoppe Support");
+//        helper.setTo(recipientEmail);
+//        String subject = "Here's the link to reset your password";
+//        String content = "<p>Hello,</p>"
+//                + "<p>You have requested to reset your password.</p>"
+//                + "<p>Click the link below to change your password:</p>"
+//                + "<p><a href=\"" + link + "\">Change my password</a></p>"
+//                + "<p>" + pass + "</p>"
+//                + "<br>"
+//                + "<p>Ignore this email if you do remember your password, "
+//                + "or you have not made the request.</p>";
+//        helper.setSubject(subject);
+//        helper.setText(content, true);
+//        mailSender.send(message);
+//    }
 
     @GetMapping("/reset_password")
     public ResponseEntity<?> showResetPasswordForm(@Param(value = "token") String token) {
-        User customer = userService.getByResetPasswordToken(token);
-        if (customer == null) {
-            return ResponseEntity.ok("failed");
-        }
+//        User customer = userService.getByResetPasswordToken(token);
+//        if (customer == null) {
+//            return ResponseEntity.ok("failed");
+//        }
         return ResponseEntity.ok("ok");
     }
 
@@ -91,18 +117,19 @@ public class UserResource {
     public ResponseEntity<?> processResetPassword(HttpServletRequest request,@Param(value = "token") String token) {
         String tokens = request.getParameter("token");
         String password = request.getParameter("password");
-        User customer = userService.getByResetPasswordToken(tokens);
-        if (customer == null) {
-            return ResponseEntity.ok("failed");
-        }
-        User user = userService.getByResetPasswordToken(token);
+//        User customer = userService.getByResetPasswordToken(tokens);
+//        if (customer == null) {
+//            return ResponseEntity.ok("failed");
+//        }
+//        User user = userService.getByResetPasswordToken(token);
 
-        if (user == null) {
-            return ResponseEntity.ok("failed");
-        } else {
-            userService.updatePassword(user, password);
-            return ResponseEntity.ok("ok");
-        }
+//        if (user == null) {
+//            return ResponseEntity.ok("failed");
+//        } else {
+//            userService.updatePassword(user, password);
+//            return ResponseEntity.ok("ok");
+//        }
+        return ResponseEntity.ok("ok");
     }
 
 

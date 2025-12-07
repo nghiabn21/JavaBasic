@@ -14,7 +14,7 @@ import java.util.Collection;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "account")
+@Table(name = "users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,11 +22,11 @@ public class User {
     private String name ;
     private String username ;
     private String password ;
-    private String email ;
-    private String temporatyPassword ;
-
-    @Column(name = "reset_password_token")
-    private String resetPasswordToken ;
+//    private String email ;
+//    private String temporatyPassword ;
+//
+//    @Column(name = "reset_password_token")
+//    private String resetPasswordToken ;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JsonIgnore
