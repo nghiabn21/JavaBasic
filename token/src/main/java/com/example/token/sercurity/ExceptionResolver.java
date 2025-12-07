@@ -1,6 +1,7 @@
 package com.example.token.sercurity;
 
 import com.example.token.domain.ErrorResponse;
+import com.example.token.exception.ApiCustomException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;

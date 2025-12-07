@@ -1,4 +1,4 @@
-package com.example.token.sercurity;
+package com.example.token.exception;
 
 public class ApiCustomException extends RuntimeException {
 
