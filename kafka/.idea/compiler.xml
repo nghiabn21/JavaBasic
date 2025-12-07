@@ -9,13 +9,17 @@
         <outputRelativeToContentRoot value="true" />
         <module name="spring-boot-kafka-producer-example" />
         <module name="spring-boot-kafka-producer-example (1)" />
+        <module name="base_dto" />
         <module name="kafka-consumer-example" />
         <module name="kafka-producer-example" />
+        <module name="email_service" />
       </profile>
     </annotationProcessing>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="base_dto" options="-parameters" />
+      <module name="email_service" options="-parameters" />
       <module name="kafka-consumer-example" options="-parameters" />
       <module name="kafka-producer-example" options="-parameters" />
       <module name="spring-boot-kafka-producer-example" options="-parameters" />

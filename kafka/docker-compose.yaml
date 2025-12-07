@@ -1,28 +1,84 @@
 services:
   zookeeper:
     image: confluentinc/cp-zookeeper:7.4.0
-    container_name: zookeeper
+    container_name: zookeeper1
     environment:
       ZOOKEEPER_SERVER_ID: 1
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
     ports:
       - "2181:2181"
+    networks:
+      - kafka_network
 
   kafka:
     image: confluentinc/cp-kafka:7.4.0
-    container_name: kafka
+    container_name: kafka1
+    hostname: broker
     depends_on:
       - zookeeper
     environment:
       KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper1:2181
+#     Khi thêm PLAINTEXT_INTERNAL, Kafka có thể sử dụng broker:29092 để giao tiếp nội bộ,
+#     giúp Zookeeper và các service khác kết nối dễ.
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
+#     Thêm PLAINTEXT_INTERNAL://broker:29092 giúp các container trong cùng mạng sử dụng broker:29092 để kết nối.
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,PLAINTEXT_INTERNAL://broker:29092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
     ports:
       - "9092:9092"
-    volumes:
-      - ./kafka_data:/var/lib/kafka/data
+    networks:
+      - kafka_network
+
+
+#  kafka-tools:
+#    image: confluentinc/cp-kafka:7.4.0
+#    hostname: kafka-tools
+#    container_name: kafka-tools
+#    command: [ "tail", "-f", "/dev/null" ]
+#    networks:
+#      - kafka_network
+#
+#  schema-registry:
+#    image: confluentinc/cp-schema-registry:7.4.0
+#    hostname: schema-registry
+#    container_name: schema-registry
+#    depends_on:
+#      - zookeeper
+#      - kafka
+#    ports:
+#      - "8082:8082"
+#    environment:
+#      SCHEMA_REGISTRY_HOST_NAME: schema-registry
+#      SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: "zookeeper1:2181"
+#    networks:
+#      - kafka_network
+#
+#  control-center:
+#    image: confluentinc/cp-enterprise-control-center:7.4.0
+#    hostname: control-center
+#    container_name: control-center
+#    depends_on:
+#      - zookeeper
+#      - kafka
+#      - schema-registry
+#    ports:
+#      - "9021:9021"
+#    environment:
+#      CONTROL_CENTER_BOOTSTRAP_SERVERS: 'broker:29092'
+#      CONTROL_CENTER_ZOOKEEPER_CONNECT: 'zookeeper1:2181'
+#      CONTROL_CENTER_SCHEMA_REGISTRY_URL: "http://schema-registry:8082"
+#      CONTROL_CENTER_REPLICATION_FACTOR: 1
+#      CONTROL_CENTER_INTERNAL_TOPICS_PARTITIONS: 1
+#      CONTROL_CENTER_MONITORING_INTERCEPTOR_TOPIC_PARTITIONS: 1
+#      CONFLUENT_METRICS_TOPIC_REPLICATION: 1
+#      PORT: 9021
+#    networks:
+#      - kafka_network
+
+networks:
+  kafka_network:
+    driver: bridge

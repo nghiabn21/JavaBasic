@@ -9,8 +9,8 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class User {
+public class Wiki {
+
     private String id;
-    private String firstName;
-    private String lastName;
+    private String content;
 }

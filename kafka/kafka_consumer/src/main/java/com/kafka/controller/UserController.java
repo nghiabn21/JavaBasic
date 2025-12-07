@@ -18,21 +18,21 @@ public class UserController {
 
     private static final String TOPIC = "Kafka_Example";
 
-    @GetMapping("/publish/{name}")
-    public String post(@PathVariable("name") final String name) {
+//    @GetMapping("/publish/{name}")
+//    public String post(@PathVariable("name") final String name) {
+//
+//        kafkaTemplate.send(TOPIC, new User(1, "Technology", "0"));
+//
+//        return "Published successfully";
+//    }
 
-        kafkaTemplate.send(TOPIC, new User(name, "Technology", 13000L));
-
-        return "Published successfully";
-    }
-
-    @GetMapping("/add-topic/{name}")
-    public String addTopic(@PathVariable("name") final String name) {
-
-        kafkaTemplate.send(name, new User(name, "Add Topic Exp", 12000L));
-
-        return "Add Topic success!!!!!";
-    }
+//    @GetMapping("/add-topic/{name}")
+//    public String addTopic(@PathVariable("name") final String name) {
+//
+//        kafkaTemplate.send(name, new User(1, "Add Topic Exp", "0"));
+//
+//        return "Add Topic success!!!!!";
+//    }
 
 //    @GetMapping("/publishList")
 //    public String postData() {

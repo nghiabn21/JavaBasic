@@ -5,6 +5,7 @@ import lombok.*;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 @Getter
 @Setter
@@ -13,6 +14,7 @@ import javax.persistence.GenerationType;
 public class Login {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
     private Long id;
     private String email;
     private String account;
