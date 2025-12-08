@@ -2,6 +2,7 @@ package com.example.token.sercurity;
 
 import com.example.token.filter.CustomAuthenticationFilter;
 //import com.example.token.filter.CustomAuthorizationFilter;
+import com.example.token.filter.CustomAuthorizationFilter;
 import com.example.token.filter.JwtUserDetails;
 //import com.example.token.filter.TemporaryPasswordUserDetailsService;
 import lombok.AllArgsConstructor;
@@ -61,7 +62,7 @@ public class SercurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeHttpRequests().antMatchers(POST, "/api/role/save/**").hasAnyAuthority("ROLE_ADMIN");
         http.authorizeHttpRequests().anyRequest().authenticated();
         http.addFilter(customAuthenticationFilter);
-//        http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 
 }

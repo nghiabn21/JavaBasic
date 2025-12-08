@@ -45,9 +45,13 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 //            String username = reds.getAccount();
 //            String password = reds.getPassword();
 //            log.info(username + " " + password);
-            String username = request.getParameter("account");
-            String password = request.getParameter("password");
+            ObjectMapper mapper = new ObjectMapper();
+            Login login = mapper.readValue(request.getInputStream(), Login.class);
+//            String username = request.getParameter("account");
+//            String password = request.getParameter("password");
 //            password = passwordEncoder.encode(password);
+            String username = login.getAccount();
+            String password = login.getPassword();
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
             return authenticationManager.authenticate(authenticationToken);
         } catch (Exception e) {
